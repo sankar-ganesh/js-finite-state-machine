@@ -373,4 +373,4 @@ marketplaceFSM.returnToSale();
 
 ## Installation
 
-* `yarn add lrujs-cache`
+* `yarn add js-finite-state-machine`
