@@ -1,0 +1,49 @@
+{
+  "name": "js-finite-state-machine",
+  "version": "0.0.1",
+  "description": "A simple Javascript finite state machine API",
+  "main": "src/fsm.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "develop": "webpack --mode development --watch",
+    "lint": "eslint --ignore-path=.gitignore . src test",
+    "test": "nyc --reporter=lcov --reporter=text mocha --require @babel/register"
+  },
+  "files": [
+    "src",
+    "dist/fsm.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sankar-ganesh/js-finite-state-machine.git"
+  },
+  "keywords": [
+    "fsm",
+    "js fsm",
+    "finite-state-machine",
+    "js-finite-state-machine",
+    "finite state machine",
+    "js finite state machine"
+  ],
+  "authors": [
+    "Sankar Ganesh <sankar.ganesh@freshworks.com>"
+  ],
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "@babel/cli": "^7.6.4",
+    "@babel/core": "^7.6.4",
+    "@babel/node": "^7.6.3",
+    "@babel/plugin-transform-arrow-functions": "^7.2.0",
+    "@babel/preset-env": "^7.6.3",
+    "@babel/register": "^7.6.2",
+    "babel-loader": "^8.0.6",
+    "chai": "^4.2.0",
+    "eslint": "^6.5.1",
+    "mocha": "^6.2.1",
+    "nyc": "^14.1.1",
+    "sinon": "^7.5.0",
+    "webpack": "^4.41.1",
+    "webpack-cli": "^3.3.9"
+  }
+}
