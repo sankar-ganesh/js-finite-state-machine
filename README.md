@@ -4,6 +4,144 @@ Javascript Finite State Machine
 
 [![Build Status](https://travis-ci.org/sankar-ganesh/js-finite-state-machine.svg?branch=master)](https://travis-ci.org/sankar-ganesh/js-finite-state-machine) [![codecov](https://codecov.io/gh/sankar-ganesh/js-finite-state-machine/branch/master/graph/badge.svg)](https://codecov.io/gh/sankar-ganesh/js-finite-state-machine) [![NPM version](https://img.shields.io/npm/v/js-finite-state-machine.svg)](https://www.npmjs.com/package/js-finite-state-machine) [![gzip size](https://img.badgesize.io/https://unpkg.com/js-finite-state-machine/dist/fsm.js?compression=gzip)](https://www.npmjs.com/package/js-finite-state-machine) [![dependencies Status](https://david-dm.org/sankar-ganesh/js-finite-state-machine/status.svg)](https://david-dm.org/sankar-ganesh/js-finite-state-machine)
 
+## Design
+
+- `entity` any distinct javascript object
+
+- `state` any particular condition of the `entity` in a specific time
+
+- `transition` period of changing from one `state` or condition to another
+
+- `lifecycle` series of changes in the life of an `entity`
+
+- `fsm` javascript object to represent the finite number of `state` & `transition` for a particular `entity`
+
+## API
+
+### setFSMId
+
+Sets the unique id for the fsm object
+
+**Parameters**
+
+- `id` identifier for the fsm object
+
+**Example**
+
+- `fsm.setFSMId(id)` sets the unique identifier `id` for the fsm object
+
+### getFSMId
+
+Returns the unique id for the fsm object
+
+**Example**
+
+- `fsm.getFSMId()` returns the identifier for the fsm object
+
+### setFSMName
+
+Sets the unique name for the fsm object
+
+**Parameters**
+
+- `name` name for the fsm object
+
+**Example**
+
+- `fsm.setFSMName(name)` sets the unique `name` for the fsm object
+
+### getFSMName
+
+Returns the unique name for the fsm object
+
+**Example**
+
+- `fsm.getFSMName()` returns the name for the fsm object
+
+### getEntity
+
+Returns the fsm entity object
+
+**Example**
+
+- `fsm.getEntity()` returns the fsm `entity` object
+
+### getEntityId
+
+Returns the fsm entity object identifier
+
+**Example**
+
+- `fsm.getEntityId()` returns the fsm `entity` object identifier
+
+### getEntityName
+
+Returns the fsm entity object name
+
+**Example**
+
+- `fsm.getEntityName()` returns the fsm `entity` object name
+
+### setEntityState
+
+Sets the current state for the fsm entity object
+
+**Parameters**
+
+- `state` the current state for the fsm `entity` object
+
+**Example**
+
+- `fsm.setEntityState(state)` sets the current `state` for the fsm `entity` object
+
+### getEntityState
+
+Returns the fsm entity object current state
+
+**Example**
+
+- `fsm.getEntityState()` returns the fsm `entity` object `state`
+
+### setStates
+
+Sets all possible states for the fsm entity object
+
+**Parameters**
+
+- `states` array of states for the fsm `entity` object
+
+**Example**
+
+- `fsm.setStates(states)` sets all possible `state` for the fsm `entity` object
+
+### getStates
+
+Returns the array of all possible states for the fsm entity object
+
+**Example**
+
+- `fsm.getStates()` returns the array of `state` for the fsm `entity` object
+
+### setTransitions
+
+Sets all possible transitions for the fsm entity object
+
+**Parameters**
+
+- `transitions` array of transitions for the fsm `entity` object
+
+**Example**
+
+- `fsm.setTransitions(transitions)` sets all possible `transition` for the fsm `entity` object
+
+### getTransitions
+
+Returns the array of all possible transitions for the fsm entity object
+
+**Example**
+
+- `fsm.getTransitions()` returns the array of `transition` for the fsm `entity` object
+
 ## Usage
 
 ```javascript
