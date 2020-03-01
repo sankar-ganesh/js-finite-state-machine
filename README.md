@@ -507,6 +507,28 @@ marketplaceFSM.revertPayment();
 
 // To return back the returned item and put it back on sale
 marketplaceFSM.returnToSale();
+
+// To track all events
+marketplaceFSM.setEventCallback(function(eventType, payload) {
+  /*
+   * Transition Event Types
+   *   a) transition.start
+   *   b) transition.before
+   *   c) transition.after
+   *
+   * State Event Types
+   *   a) state.leave
+   *   b) state.left
+   *   c) state.enter
+   *   d) state.entered
+   *   e) state.reached
+   *
+   * Paylooad is the transition object
+   */
+});
+
+// To stop tracking all events
+marketplaceFSM.resetEventCallback();
 ```
 
 ## Installation

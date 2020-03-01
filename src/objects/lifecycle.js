@@ -1,5 +1,7 @@
 'use strict';
 
+import EventEmitter from './event_emitter';
+
 function Lifecycle(lifecycle) {
 	let time = new Date().getTime();
 	this.id = lifecycle && lifecycle.id || `fsm_lifecycle_id_${time}`;
@@ -177,6 +179,7 @@ Lifecycle.prototype.run = function(transition, payload) {
 
 Lifecycle.prototype.execute = function(transition, payload) {
 	// Start The Transition
+	this.trigger(transition.getEvents().before.value, transition);
 	transition.before();
 
 	let fromState = this.getEntityState(),
@@ -187,10 +190,12 @@ Lifecycle.prototype.execute = function(transition, payload) {
 
 	// Ack The Current State
 	if (fromState) {
+		this.trigger(fromState.getEvents().leave.value, transition);
 		fromState.leave();
 	}
 
 	// Awake The Transition
+	this.trigger(transition.getEvents().start.value, transition);
 	transition.start(fromState, toState, payload);
 
 	// Swap The Current State
@@ -210,16 +215,41 @@ Lifecycle.prototype.execute = function(transition, payload) {
 		this.setEntityStateTo(toState.getStateName());
 
 		// Mark The Current State As Complete
-		fromState.left();
+		this.trigger(fromState.getEvents().left.value, transition);
+		fromState.left(toState, this.entity);
 
 		// Ack The New State
-		toState.enter();
-		toState.reached();
-		toState.entered();
+		this.trigger(toState.getEvents().enter.value, transition);
+		toState.enter(fromState, this.entity);
+		
+		this.trigger(toState.getEvents().reached.value, transition);
+		toState.reached(toState, this.entity);
+
+		this.trigger(toState.getEvents().entered.value, transition);
+		toState.entered(toState, this.entity);
 	}
 	
 	// End The Transition
+	this.trigger(transition.getEvents().after.value, transition);
 	transition.after();
+};
+
+Lifecycle.prototype.trigger = function(type, payload) {
+	if (EventEmitter.isEnabled()) {
+		EventEmitter.getCallback()(type, payload);
+	}
+};
+
+Lifecycle.prototype.setEventCallback = function(callback) {
+	EventEmitter.setCallback(callback);
+};
+
+Lifecycle.prototype.resetEventCallback = function() {
+	EventEmitter.clear();
+};
+
+Lifecycle.prototype.getEventEmitter = function() {
+	return EventEmitter;
 };
 
 export default Lifecycle;

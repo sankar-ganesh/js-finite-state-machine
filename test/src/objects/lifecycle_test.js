@@ -181,6 +181,22 @@ module.exports = function LifecycleTest() {
     assert.equal(lifecycle.hasTransition(new Transition()), false);
   });
 
+  it('check lifecycle trigger events callback when enabled', function() {
+    let callback = sinon.fake();
+    let lifecycle = new Lifecycle();
+    lifecycle.setEventCallback(callback);
+    lifecycle.trigger();
+    assert.ok(callback.called);
+  });
+
+  it('check lifecycle trigger events callback when not enabled', function() {
+    let callback = sinon.fake();
+    let lifecycle = new Lifecycle();
+    lifecycle.resetEventCallback();
+    lifecycle.trigger();
+    assert.notOk(callback.called);
+  });
+
   it('check lifecycle run method', function() {
     let solid = new State({id: 'solid', name: 'solid'}),
         liquid = new State({id: 'liquid', name: 'liquid'}),

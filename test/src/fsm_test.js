@@ -34,7 +34,6 @@ module.exports = function FSMTest() {
     assert.equal(fsm.getFSMName(), 'fsmName');
     assert.equal(fsm.getEntityId(), 'fsmId_entity');
     assert.equal(fsm.getEntityName(), 'fsmName_entity');
-
     // Check For Entity States
     assert.equal(fsm.getEntityState(), null);
     fsm.setEntityState(new State({id: 'stateId', name: 'stateName'}));
@@ -63,6 +62,38 @@ module.exports = function FSMTest() {
     fsm.setTransitions([transition]);
 		assert.equal(fsm.getStates()[0].getStateId(), state.getStateId());
     assert.equal(fsm.getTransitions()[0].getTransitionId(), transition.getTransitionId());
+  });
+
+  it('check fsm object event emitter without callback', function() {
+    let fsm = new FSM();
+    assert.equal(fsm.getEventEmitter().isEnabled(), false);
+    assert.equal(fsm.getEventEmitter().getCallback(), null);
+  });
+
+  it('check fsm object event emitter init callback', function() {
+    let callback = () => {};
+    let fsm = new FSM({
+      callback: callback
+    });
+    assert.equal(fsm.getEventEmitter().isEnabled(), true);
+    assert.deepEqual(fsm.getEventEmitter().getCallback(), callback);
+  });
+
+  it('check fsm object event emitter set callback', function() {
+    let callback = () => {};
+    let fsm = new FSM();
+    fsm.setEventCallback(callback);
+    assert.equal(fsm.getEventEmitter().isEnabled(), true);
+    assert.deepEqual(fsm.getEventEmitter().getCallback(), callback);
+  });
+
+  it('check fsm object event emitter clear method', function() {
+    let callback = () => {};
+    let fsm = new FSM();
+    fsm.setEventCallback(callback);
+    fsm.resetEventCallback()
+    assert.equal(fsm.getEventEmitter().isEnabled(), false);
+    assert.equal(fsm.getEventEmitter().getCallback(), null);
   });
 
   it('check fsm object init', function() {

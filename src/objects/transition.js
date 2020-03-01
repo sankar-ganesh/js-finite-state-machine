@@ -1,5 +1,11 @@
 'use strict';
 
+const events = Object.freeze({
+	before:   { id: 'before', value: 'transition.before'},
+	after:    { id: 'after',  value: 'transition.after'},
+	start:    { id: 'start',  value: 'transition.start'}
+});
+
 function Transition(transition) {
 	let time = new Date().getTime();
 	this.id = transition && transition.id || `fsm_transition_id_${time}`;
@@ -91,6 +97,10 @@ Transition.prototype.setTransitionTo = function(to) {
 
 Transition.prototype.getMethods = function() {
 	return this.methods;
+};
+
+Transition.prototype.getEvents = function() {
+	return events;
 };
 
 Transition.prototype.setMethodBefore = function(before) {

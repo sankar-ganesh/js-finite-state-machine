@@ -1,5 +1,13 @@
 'use strict';
 
+const events = Object.freeze({
+	enter:   { id: 'enter',   value: 'state.enter'},
+	leave:   { id: 'leave',   value: 'state.leave'},
+	entered: { id: 'entered', value: 'state.entered'},
+	left:    { id: 'left',    value: 'state.left'},
+	reached: { id: 'reached', value: 'state.reached'}
+});
+
 function State(state) {
 	let time = new Date().getTime();
 	this.id = state && state.id || `fsm_state_id_${time}`;
@@ -52,6 +60,10 @@ State.prototype.setEntityId = function(entityId) {
 
 State.prototype.getMethods = function() {
 	return this.methods;
+};
+
+State.prototype.getEvents = function() {
+	return events;
 };
 
 State.prototype.setMethodEnter = function(enter) {

@@ -6,7 +6,8 @@ import Entity from './objects/entity';
 function FSM(fsm) {
 	let time = new Date().getTime(),
 			id = fsm && fsm.id,
-			name = fsm && fsm.name;
+			name = fsm && fsm.name,
+			callback = fsm && fsm.callback || null;
 	this.id = id || `fsm_id_${time}`;
 	this.name = name || `fsm_name_${time}`;
 
@@ -17,14 +18,26 @@ function FSM(fsm) {
 			};
 	payload.entity = fsm && fsm.entity || new Entity(payload);
 	payload.states = fsm && fsm.states || [];
+	
+	// Identify the entity id
+	let entityId = payload.entity.getEntityId();
+	
+	// Set EntityId for all states
+	payload.states.forEach(state => state.setEntityId(entityId));
+	
 	payload.transitions = fsm && fsm.transitions || [];
 	this.lifecycle = new LifeCycle(payload);
 
 	// Initialize Lifecycle
 	payload.transitions.forEach(transition => {
+		// Set EntityId for all transitions
+		transition.setEntityId(entityId);
 		let name = transition && transition.getTransitionName();
 		this[name] = (payload) => this.lifecycle.run(transition, payload);
 	});
+
+	// Initialize Event Emitter
+	this.lifecycle.setEventCallback(callback);
 
 	return this; 
 }
@@ -85,6 +98,18 @@ FSM.prototype.setTransitions = function(transitions) {
 
 FSM.prototype.getTransitions = function() {
 	return this.lifecycle.getTransitions();
+};
+
+FSM.prototype.setEventCallback = function(callback) {
+	this.lifecycle.setEventCallback(callback);
+};
+
+FSM.prototype.resetEventCallback = function() {
+	this.lifecycle.resetEventCallback();
+};
+
+FSM.prototype.getEventEmitter = function() {
+	return this.lifecycle.getEventEmitter();
 };
 
 export default FSM;
