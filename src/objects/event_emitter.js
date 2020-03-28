@@ -1,50 +1,36 @@
 'use strict';
 
-var EventEmitter = (function() {
-	var instance;
+function EventEmitter() {
+  this.clear();
+  return this;
+}
 
-	function Emitter() {
-    if (instance) {
-      return instance;
-    }
-    this.callback = null;
-    this.enabled = false;
-    instance = this;
-  }
+EventEmitter.prototype.isFunction = function(obj) {
+	return (obj && typeof obj === 'function')? true : false;
+};
 
-  Emitter.prototype.isFunction = function(obj) {
-		return (obj && typeof obj === 'function')? true : false;
-	};
+EventEmitter.prototype.getCallback = function() {
+	return this.callback;
+};
 
-	Emitter.prototype.getCallback = function() {
-		return this.callback;
-	};
+EventEmitter.prototype.setCallback = function(callback) {
+	if (this.isFunction(callback)) {
+		this.callback = callback;
+	}
+	this.enabled = false;
+	if (this.callback) {
+		this.enabled = true;
+	}
+	return this;
+};
 
-	Emitter.prototype.setCallback = function(callback) {
-		if (this.isFunction(callback)) {
-			this.callback = callback;
-		}
-		this.enabled = false;
-		if (this.callback) {
-			this.enabled = true;
-		}
-		return this;
-	};
+EventEmitter.prototype.isEnabled = function() {
+	return this.enabled;
+};
 
-	Emitter.prototype.isEnabled = function() {
-		return this.enabled;
-	};
-
-	Emitter.prototype.clear = function() {
-		this.callback = null;
-		this.enabled = false;
-	};
-
-	Emitter.prototype.getInstance = function() {
-		return new Emitter();
-	};
-
-  return new Emitter();
-})();
+EventEmitter.prototype.clear = function() {
+	this.callback = null;
+	this.enabled = false;
+};
 
 export default EventEmitter;

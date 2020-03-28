@@ -19,6 +19,9 @@ function Lifecycle(lifecycle) {
 	// Current Entity To State
 	this.to = lifecycle && lifecycle.to || null;
 
+	// Event Emitter
+	this.eventEmitter = new EventEmitter();
+
 	// Entity Transitions
 	this.setTransitions(lifecycle && lifecycle.transitions || []);
 
@@ -235,21 +238,21 @@ Lifecycle.prototype.execute = function(transition, payload) {
 };
 
 Lifecycle.prototype.trigger = function(type, payload) {
-	if (EventEmitter.isEnabled()) {
-		EventEmitter.getCallback()(type, payload);
+	if (this.eventEmitter.isEnabled()) {
+		this.eventEmitter.getCallback()(type, payload);
 	}
 };
 
 Lifecycle.prototype.setEventCallback = function(callback) {
-	EventEmitter.setCallback(callback);
+	this.eventEmitter.setCallback(callback);
 };
 
 Lifecycle.prototype.resetEventCallback = function() {
-	EventEmitter.clear();
+	this.eventEmitter.clear();
 };
 
 Lifecycle.prototype.getEventEmitter = function() {
-	return EventEmitter;
+	return this.eventEmitter;
 };
 
 export default Lifecycle;
