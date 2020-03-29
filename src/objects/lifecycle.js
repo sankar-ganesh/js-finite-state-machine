@@ -182,8 +182,8 @@ Lifecycle.prototype.run = function(transition, payload) {
 
 Lifecycle.prototype.execute = function(transition, payload) {
 	// Start The Transition
-	this.trigger(transition.getEvents().before.value, transition);
-	transition.before();
+	this.trigger(transition.getEvents().before.value, transition, payload);
+	transition.before(payload);
 
 	let fromState = this.getEntityState(),
 			fromStateName = fromState && fromState.getStateName(),
@@ -193,12 +193,12 @@ Lifecycle.prototype.execute = function(transition, payload) {
 
 	// Ack The Current State
 	if (fromState) {
-		this.trigger(fromState.getEvents().leave.value, transition);
-		fromState.leave();
+		this.trigger(fromState.getEvents().leave.value, transition, payload);
+		fromState.leave(payload);
 	}
 
 	// Awake The Transition
-	this.trigger(transition.getEvents().start.value, transition);
+	this.trigger(transition.getEvents().start.value, transition, payload);
 	transition.start(fromState, toState, payload);
 
 	// Swap The Current State
@@ -218,23 +218,23 @@ Lifecycle.prototype.execute = function(transition, payload) {
 		this.setEntityStateTo(toState.getStateName());
 
 		// Mark The Current State As Complete
-		this.trigger(fromState.getEvents().left.value, transition);
-		fromState.left(toState, this.entity);
+		this.trigger(fromState.getEvents().left.value, transition, payload);
+		fromState.left(toState, this.entity, payload);
 
 		// Ack The New State
-		this.trigger(toState.getEvents().enter.value, transition);
-		toState.enter(fromState, this.entity);
+		this.trigger(toState.getEvents().enter.value, transition, payload);
+		toState.enter(fromState, this.entity, payload);
 		
-		this.trigger(toState.getEvents().reached.value, transition);
-		toState.reached(toState, this.entity);
+		this.trigger(toState.getEvents().reached.value, transition, payload);
+		toState.reached(toState, this.entity, payload);
 
-		this.trigger(toState.getEvents().entered.value, transition);
-		toState.entered(toState, this.entity);
+		this.trigger(toState.getEvents().entered.value, transition, payload);
+		toState.entered(toState, this.entity, payload);
 	}
 	
 	// End The Transition
-	this.trigger(transition.getEvents().after.value, transition);
-	transition.after();
+	this.trigger(transition.getEvents().after.value, transition, payload);
+	transition.after(payload);
 };
 
 Lifecycle.prototype.trigger = function(type, payload) {

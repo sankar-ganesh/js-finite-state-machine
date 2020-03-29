@@ -313,4 +313,157 @@ module.exports = function FSMTest() {
     assert.notOk(onSolidLeft.called);
     assert.deepEqual(fsm.getEntityState(), solid);
   });
+
+  it('check fsm object called with', function() {
+    let onSolidEnter = sinon.spy(),
+        onSolidLeave = sinon.spy(),
+        onSolidReached = sinon.spy(),
+        onSolidEntered = sinon.spy(),
+        onSolidLeft = sinon.spy(),
+        onLiquidEnter = sinon.spy(),
+        onLiquidLeave = sinon.spy(),
+        onLiquidReached = sinon.spy(),
+        onLiquidEntered = sinon.spy(),
+        onLiquidLeft = sinon.spy(),
+        onGasEnter = sinon.spy(),
+        onGasLeave = sinon.spy(),
+        onGasReached = sinon.spy(),
+        onGasEntered = sinon.spy(),
+        onGasLeft = sinon.spy(),
+        onMeltBefore = sinon.spy(),
+        onMeltAfter = sinon.spy(),
+        onMeltStart = sinon.spy(),
+        onVaporizeStart = sinon.spy(),
+        onVaporizeBefore = sinon.spy(),
+        onVaporizeAfter = sinon.spy(),
+        onCondenseStart = sinon.spy(),
+        onCondenseBefore = sinon.spy(),
+        onCondenseAfter = sinon.spy(),
+        onFreezeStart = sinon.spy(),
+        onFreezeBefore = sinon.spy(),
+        onFreezeAfter = sinon.spy(),
+        solid = new State({
+          id: 'solid',
+          name: 'solid',
+          methods: {
+            enter: onSolidEnter,
+            leave: onSolidLeave,
+            entered: onSolidEntered,
+            left: onSolidLeft,
+            reached: onSolidReached
+          }
+        }),
+        liquid = new State({
+          id: 'liquid',
+          name: 'liquid',
+          methods: {
+            enter: onLiquidEnter,
+            leave: onLiquidLeave,
+            entered: onLiquidEntered,
+            left: onLiquidLeft,
+            reached: onLiquidReached
+          }
+        }),
+        gas = new State({
+          id: 'gas',
+          name: 'gas',
+          methods: {
+            enter: onGasEnter,
+            leave: onGasLeave,
+            entered: onGasEntered,
+            left: onGasLeft,
+            reached: onGasReached
+          }
+        }),
+        substance = new Entity({id: 'substance', name: 'substance', state: solid}),
+        melt = new Transition({
+          id: 'melt',
+          name: 'melt',
+          from: [solid],
+          to: liquid,
+          methods: {
+            start: onMeltStart,
+            after: onMeltAfter,
+            before: onMeltBefore
+          }
+        }),
+        vaporize = new Transition({
+          id: 'vaporize',
+          name: 'vaporize',
+          from: [liquid],
+          to: gas,
+          methods: {
+            start: onVaporizeStart,
+            after: onVaporizeAfter,
+            before: onVaporizeBefore
+          }
+        }),
+        condense = new Transition({
+          id: 'condense',
+          name: 'condense',
+          from: [gas],
+          to: liquid,
+          methods: {
+            start: onCondenseStart,
+            after: onCondenseAfter,
+            before: onCondenseBefore
+          }
+        }),
+        freeze = new Transition({
+          id: 'freeze',
+          name: 'freeze',
+          from: [liquid],
+          to: solid,
+          methods: {
+            start: onFreezeStart,
+            after: onFreezeAfter,
+            before: onFreezeBefore
+          }
+        });
+    
+    let fsm = new FSM({
+      id: "fsmId",
+      name: "fsmName",
+      entity: substance,
+      states: [solid, liquid, gas],
+      transitions: [melt, vaporize, condense, freeze]
+    }),
+    payload = {action: 'melting'};
+
+    let clock = sinon.useFakeTimers(),
+        resetHistory = () => {
+          onSolidEnter.resetHistory(),
+          onSolidLeave.resetHistory(),
+          onSolidEntered.resetHistory(),
+          onSolidLeft.resetHistory(),
+          onSolidReached.resetHistory(),
+          onLiquidEnter.resetHistory(),
+          onLiquidLeave.resetHistory(),
+          onLiquidEntered.resetHistory(),
+          onLiquidLeft.resetHistory(),
+          onLiquidReached.resetHistory(),
+          onGasEnter.resetHistory(),
+          onGasLeave.resetHistory(),
+          onGasEntered.resetHistory(),
+          onGasLeft.resetHistory(),
+          onGasReached.resetHistory(),
+          onMeltStart.resetHistory(),
+          onMeltBefore.resetHistory(),
+          onMeltAfter.resetHistory(),
+          onVaporizeStart.resetHistory(),
+          onVaporizeBefore.resetHistory(),
+          onVaporizeAfter.resetHistory(),
+          onCondenseStart.resetHistory(),
+          onCondenseBefore.resetHistory(),
+          onCondenseAfter.resetHistory(),
+          onFreezeStart.resetHistory(),
+          onFreezeBefore.resetHistory(),
+          onFreezeAfter.resetHistory();
+        };
+
+    fsm.melt(payload);
+    resetHistory();
+    clock.tick(1000);
+    sinon.assert.calledWith(onMeltBefore, payload);
+  });
 };
