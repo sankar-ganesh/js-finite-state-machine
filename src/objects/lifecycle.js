@@ -181,20 +181,20 @@ Lifecycle.prototype.run = function(transition, payload) {
 };
 
 Lifecycle.prototype.execute = function(transition, payload) {
-	// Start The Transition
-	this.trigger(transition.getEvents().before.value, transition, payload);
-	transition.before(payload);
-
 	let fromState = this.getEntityState(),
 			fromStateName = fromState && fromState.getStateName(),
 			transitionTo = transition.getTransitionTo(),
 			toStateName = transitionTo && transitionTo.getStateName(),
 			toState = this.getStateByName(toStateName);
 
+	// Start The Transition
+	this.trigger(transition.getEvents().before.value, transition, payload);
+	transition.before(fromState, toState, payload);
+
 	// Ack The Current State
 	if (fromState) {
 		this.trigger(fromState.getEvents().leave.value, transition, payload);
-		fromState.leave(payload);
+		fromState.leave(fromState, this.entity, payload);
 	}
 
 	// Awake The Transition
@@ -219,11 +219,11 @@ Lifecycle.prototype.execute = function(transition, payload) {
 
 		// Mark The Current State As Complete
 		this.trigger(fromState.getEvents().left.value, transition, payload);
-		fromState.left(toState, this.entity, payload);
+		fromState.left(fromState, this.entity, payload);
 
 		// Ack The New State
 		this.trigger(toState.getEvents().enter.value, transition, payload);
-		toState.enter(fromState, this.entity, payload);
+		toState.enter(toState, this.entity, payload);
 		
 		this.trigger(toState.getEvents().reached.value, transition, payload);
 		toState.reached(toState, this.entity, payload);
@@ -234,12 +234,12 @@ Lifecycle.prototype.execute = function(transition, payload) {
 	
 	// End The Transition
 	this.trigger(transition.getEvents().after.value, transition, payload);
-	transition.after(payload);
+	transition.after(fromState, toState, payload);
 };
 
-Lifecycle.prototype.trigger = function(type, payload) {
+Lifecycle.prototype.trigger = function(type, transition, payload) {
 	if (this.eventEmitter.isEnabled()) {
-		this.eventEmitter.getCallback()(type, payload);
+		this.eventEmitter.getCallback()(type, transition, payload);
 	}
 };
 

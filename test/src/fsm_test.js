@@ -464,6 +464,32 @@ module.exports = function FSMTest() {
     fsm.melt(payload);
     resetHistory();
     clock.tick(1000);
-    sinon.assert.calledWith(onMeltBefore, payload);
+    sinon.assert.calledWith(onMeltBefore, solid, liquid, payload);
+    sinon.assert.calledWith(onMeltStart, solid, liquid, payload);
+    sinon.assert.calledWith(onMeltAfter, solid, liquid, payload);
+
+    payload = {action: 'vaporizing'};
+    resetHistory();
+    fsm.vaporize(payload);
+    clock.tick(1000);
+    sinon.assert.calledWith(onVaporizeBefore, liquid, gas, payload);
+    sinon.assert.calledWith(onVaporizeStart, liquid, gas, payload);
+    sinon.assert.calledWith(onVaporizeAfter, liquid, gas, payload);
+
+    payload = {action: 'condensing'};
+    resetHistory();
+    fsm.condense(payload);
+    clock.tick(1000);
+    sinon.assert.calledWith(onCondenseBefore, gas, liquid, payload);
+    sinon.assert.calledWith(onCondenseStart, gas, liquid, payload);
+    sinon.assert.calledWith(onCondenseAfter, gas, liquid, payload);
+
+    payload = {action: 'freezing'};
+    resetHistory();
+    fsm.freeze(payload);
+    clock.tick(1000);
+    sinon.assert.calledWith(onFreezeBefore, liquid, solid, payload);
+    sinon.assert.calledWith(onFreezeStart, liquid, solid, payload);
+    sinon.assert.calledWith(onFreezeAfter, liquid, solid, payload);
   });
 };
